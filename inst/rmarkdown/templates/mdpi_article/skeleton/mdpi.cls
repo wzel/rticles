@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% %%	MDPI class for LaTeX files	 15.2.2019 b
+%% %%	MDPI class for LaTeX files	 14.6.2020
 %% %%	For any information please send an e-mail to:
 %% %%		latex@mdpi.com
 %% %%
@@ -20,7 +20,7 @@
 
 %% IDENTIFICATION
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{mdpi}[15/02/2019 MDPI paper class]
+\ProvidesClass{Definitions/mdpi}[06/14/2020 MDPI paper class]
 
 %%%% Copyright and citebox
  \AtEndDocument{\par \cright}
@@ -47,7 +47,7 @@
 \RequirePackage{tabto} % To use tab for alignment on first page
 \RequirePackage[table]{xcolor} % To provide color for soul (for english editing) and provide coloring for tables (author request)
 \RequirePackage{soul} % To highlight text
-\newcommand{\highlight}[1]{\colorbox{yellow}{#1}}
+\newcommand{\highlighting}[1]{\colorbox{yellow}{#1}}
 \RequirePackage{multirow}
 \RequirePackage{microtype} % For command \textls[]{}
 \RequirePackage{tikz} % For \foreach used for Orcid icon
@@ -58,7 +58,7 @@
 %% To choose the journal
 % All journals (website name, full name, short name, DOI abbreviation, and ISSN) are defined in an extra file. 
 % This is the same as for mdpi.cls.
-\input{journalnames}
+\input{Definitions/journalnames}
 \DeclareOption{journal}{\ClassWarning{mdpi}{You used an invalid journal name or you have not specified the journal. The first option of the documentclass command specifies the journal. The word 'journal' should be replaced by one of the journal names specified in template.tex (in the comment 'Choose between the following MDPI journal').}} 
 
 %% To choose the type of manuscript
@@ -201,6 +201,10 @@
  \setcounter{notation}{0}
  \newtheorem{Notation}[notation]{Notation}
  
+ \newcounter{assumption}
+ \setcounter{assumption}{0}
+ \newtheorem{Assumption}[assumption]{Assumption}
+ 
 %%%% Hyphenation
 \RequirePackage[none]{hyphenat}
 \sloppy
@@ -215,17 +219,19 @@
 \OR \equal{\@journal}{genealogy}
 \OR \equal{\@journal}{humanities}
 \OR \equal{\@journal}{ijfs}
+\OR \equal{\@journal}{jintelligence}
+\OR \equal{\@journal}{journalmedia}
 \OR \equal{\@journal}{jrfm}
 \OR \equal{\@journal}{languages}
 \OR \equal{\@journal}{laws}
 \OR \equal{\@journal}{religions}
 \OR \equal{\@journal}{risks}
 \OR \equal{\@journal}{socsci}}{%
-	\bibliographystyle{chicago2}
+	\bibliographystyle{Definitions/chicago2}
 	\bibpunct{(}{)}{;}{x}{}{}%
 	}{%
-	\bibliographystyle{mdpi}
-	\bibpunct{[}{]}{,}{n}{}{}%
+	\bibliographystyle{Definitions/mdpi}
+	\bibpunct{[}{]}{,}{n}{}{,}%
 	}%
 
 \renewcommand\NAT@set@cites{%
@@ -434,7 +440,7 @@
 
 %% ORCID
 % Make Orcid icon
-\newcommand{\orcidicon}{\includegraphics[width=0.32cm]{logo-orcid.pdf}}
+\newcommand{\orcidicon}{\includegraphics[width=0.32cm]{Definitions/logo-orcid.eps}}
 
 % Define link and button for each author
 \foreach \x in {A, ..., Z}{%
@@ -539,20 +545,20 @@
 			\OR \equal{\@arttype}{Book}}{}{%
 				\ifthenelse{\equal{\@status}{submit}}{%	
 					\hfill \href{http://www.mdpi.com}{%
-					\includegraphics[height=1cm]{logo-mdpi.pdf}}\vspace{0.5cm}%
+					\includegraphics[height=1cm]{Definitions/logo-mdpi.eps}}\vspace{0.5cm}%
 					}{
 					\href{http://www.mdpi.com/journal/\@journal}{
-					\includegraphics[height=1.2cm]{\@journal-logo.eps}}%
+					\includegraphics[height=1.2cm]{Definitions/\@journal-logo.eps}}%
 					\hfill
 					\ifthenelse{\equal{\@journal}{proceedings}}{
 						\href{http://www.mdpi.com/journal/\@journal}{
-						\includegraphics[height=1.2cm]{logo-conference.eps}
+						\includegraphics[height=1.2cm]{Definitions/logo-conference.eps}
 						\hfill}
 						}{}
 					\ifthenelse{\equal{\@journal}{scipharm}}{%
-						\href{http://www.mdpi.com}{\includegraphics[height=1cm]{logo-mdpi-scipharm.eps}}%
+						\href{http://www.mdpi.com}{\includegraphics[height=1cm]{Definitions/logo-mdpi-scipharm.eps}}%
 						}{%
-						\href{http://www.mdpi.com}{\includegraphics[height=1cm]{logo-mdpi.pdf}}%
+						\href{http://www.mdpi.com}{\includegraphics[height=1cm]{Definitions/logo-mdpi.eps}}%
 						}%
 					}%
 			}%
@@ -659,7 +665,11 @@
         		\ifthenelse{\equal{\@status}{submit}}{
         			Version {\@ \today} submitted to \journalname
         			}{
-        			\mbox{\@history}
+        			\ifthenelse{\equal{\@journal}{sci}}{
+				\@history
+				}{
+				\mbox{\@history}
+				}
 			}
         	}{
         	\parbox[tb]{.79\textwidth}{
@@ -670,14 +680,18 @@
         		\ifthenelse{\equal{\@status}{submit}}{
         			Version {\@ \today} submitted to \journalname
         			}{
-        			\mbox{\@history}
+        			\ifthenelse{\equal{\@journal}{sci}}{
+				\@history
+				}{
+				\mbox{\@history}
+				}
 			}
         		}
         	\parbox[b]{.19\textwidth}{
         		\hfill
         		\ifthenelse{\equal{\@updates}{\@empty}}{
         			}{
-        			\href{http://www.mdpi.com/\@ISSN/\@pubvolume/\@issuenum/\@articlenumber?type=check_update&version=1}{\includegraphics[height=.6cm]{logo-updates.pdf}}%
+        			\href{http://www.mdpi.com/\@ISSN/\@pubvolume/\@issuenum/\@articlenumber?type=check_update&version=1}{\includegraphics[height=.6cm]{Definitions/logo-updates.pdf}}%
         			}%
         		}%
 		}
@@ -1127,7 +1141,7 @@
 			Submitted to {\em \journalname} for %
 			possible open access publication %
 			under the terms and conditions of the Creative Commons Attribution %
-			\ifthenelse{\equal{\@journal}{ijtpp}}{NonCommercial NoDerivatives (CC BY-NC-ND)}{(CC BY)} %
+			\ifthenelse{\equal{\@journal}{ijtpp}}{(CC BY-NC-ND)}{(CC BY)} %
 			license %
 			\ifthenelse{\equal{\@journal}{ijtpp}}{
 			(\changeurlcolor{black}%
@@ -1143,9 +1157,9 @@
 				\vspace{2mm}%
 				\href{http://creativecommons.org/}{%
 				\ifthenelse{\equal{\@journal}{ijtpp}}{%
-					\includegraphics[width=0.94\textwidth]{logo-ccby-nc-nd.eps}%
+					\includegraphics[width=0.94\textwidth]{Definitions/logo-ccby-nc-nd.eps}%
 					}{%
-					\includegraphics[width=0.94\textwidth]{logo-ccby.pdf}
+					\includegraphics[width=0.94\textwidth]{Definitions/logo-ccby.eps}
 					}
 				}
 			\end{minipage}%
@@ -1155,7 +1169,7 @@
 				This article is an open access article %
 				distributed under the terms and conditions %
 				of the Creative Commons Attribution %
-				\ifthenelse{\equal{\@journal}{ijtpp}}{NonCommercial NoDerivatives (CC BY-NC-ND)}{(CC BY)} %
+				\ifthenelse{\equal{\@journal}{ijtpp}}{(CC BY-NC-ND)}{(CC BY)} %
 				license %
 				\ifthenelse{\equal{\@journal}{ijtpp}}{
 				(\changeurlcolor{black}%
